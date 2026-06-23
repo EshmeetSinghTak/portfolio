@@ -764,7 +764,7 @@ export default async function ProjectPage({
 }) {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
-  if (!project) notFound();
+  if (!project) return notFound();
 
   return (
     <article className="section">
