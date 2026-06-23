@@ -61,6 +61,8 @@ export default async function ProjectPage({
       {project.screenshots && project.screenshots.length > 0 ? (
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {project.screenshots.map((src) => (
+            // Plain <img>: screenshots are user-supplied with arbitrary dimensions; next/image's required sizing is over-engineering for this static portfolio.
+            // eslint-disable-next-line @next/next/no-img-element
             <img key={src} src={src} alt={`${project.title} screenshot`} className="rounded-lg border border-border" />
           ))}
         </div>
