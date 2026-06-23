@@ -13,7 +13,7 @@ export default function JourneyTimeline() {
       <div className="mt-10 flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4
                       max-sm:flex-col max-sm:overflow-visible">
         {projects.map((p, i) => (
-          <div key={p.slug} className="relative snap-start max-sm:pl-6">
+          <div key={p.slug} className="relative shrink-0 snap-start max-sm:pl-6">
             {/* connector dot */}
             <span className="absolute -top-4 left-2 h-3 w-3 rounded-full bg-linear-to-r from-accent to-accent2
                              max-sm:left-0 max-sm:top-2" />
