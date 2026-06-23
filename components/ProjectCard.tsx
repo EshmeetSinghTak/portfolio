@@ -1,12 +1,6 @@
 import Link from "next/link";
 import type { Project } from "@/data/projects";
-
-function formatDate(date: string) {
-  // "2026-04" -> "Apr 2026"
-  const [y, m] = date.split("-");
-  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  return `${months[Number(m) - 1]} ${y}`;
-}
+import { formatDate } from "@/lib/projects";
 
 export default function ProjectCard({ project }: { project: Project }) {
   return (

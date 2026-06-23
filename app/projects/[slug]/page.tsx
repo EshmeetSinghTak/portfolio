@@ -1,9 +1,15 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getAllProjects, getProjectBySlug } from "@/lib/projects";
+import { getAllProjects, getProjectBySlug, formatDate } from "@/lib/projects";
 
 export function generateStaticParams() {
   return getAllProjects().map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
+  return { title: project ? `${project.title} — Portfolio` : "Project" };
 }
 
 export default async function ProjectPage({
@@ -19,6 +25,7 @@ export default async function ProjectPage({
     <article className="section">
       <Link href="/#projects" className="text-sm text-muted hover:text-white">← Back to journey</Link>
       <h1 className="mt-4 text-4xl font-extrabold text-gradient">{project.title}</h1>
+      <p className="mt-1 text-sm font-bold text-accent">{formatDate(project.date)}</p>
       <p className="mt-2 text-muted">{project.summary}</p>
 
       <div className="mt-4 flex flex-wrap gap-2">
@@ -49,6 +56,14 @@ export default async function ProjectPage({
             ))}
           </ul>
         </>
+      ) : null}
+
+      {project.screenshots && project.screenshots.length > 0 ? (
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          {project.screenshots.map((src) => (
+            <img key={src} src={src} alt={`${project.title} screenshot`} className="rounded-lg border border-border" />
+          ))}
+        </div>
       ) : null}
     </article>
   );
