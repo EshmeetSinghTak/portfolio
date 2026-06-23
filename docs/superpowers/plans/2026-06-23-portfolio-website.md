@@ -11,7 +11,7 @@
 ## Global Constraints
 
 - **Language:** TypeScript everywhere (`.ts` / `.tsx`). No plain `.js` source files.
-- **Styling:** Tailwind CSS utility classes only — no separate CSS modules except the single global stylesheet.
+- **Styling:** Tailwind CSS **v4** utility classes only — no separate CSS modules except the single global stylesheet. v4 specifics: theme is configured in `app/globals.css` via `@import "tailwindcss"` + `@theme { --color-*: … }` (there is NO `tailwind.config.ts`); gradient utilities are `bg-linear-to-*` (NOT `bg-gradient-to-*`); custom `--color-<name>` tokens generate `bg-/text-/border-/from-/to-<name>` utilities.
 - **Rendering:** Static Site Generation. No server-only data fetching, no database, no API routes.
 - **Add-a-project rule:** Adding a project MUST require editing only `data/projects.ts`. No task may hardcode an individual project anywhere else.
 - **Visual direction:** Dark & techy. Background deep navy `#0c0e14`; accent gradient violet→purple `#6f7afd → #a855f7`; light text. Applied to name, primary buttons, timeline line/dots, and date markers.
@@ -49,8 +49,7 @@ portfolio/
 ├─ public/
 │  ├─ resume.pdf                 # placeholder, replaced with real resume
 │  └─ projects/                  # project images/screenshots
-├─ tailwind.config.ts
-└─ (Next.js scaffold files: package.json, tsconfig.json, next.config.*, postcss.config.*)
+└─ (Next.js scaffold files: package.json, tsconfig.json, next.config.*, postcss.config.* — Tailwind v4 needs NO tailwind.config.ts; theme lives in app/globals.css)
 ```
 
 ---
@@ -60,7 +59,7 @@ portfolio/
 The project folder already contains `docs/`, `.gitignore`, `.git/`, and `.superpowers/`, so `create-next-app` cannot target it directly (it refuses a non-empty dir). Scaffold into a temp subfolder and move the generated files up.
 
 **Files:**
-- Create: all Next.js scaffold files (`package.json`, `tsconfig.json`, `app/`, `tailwind.config.ts`, etc.)
+- Create: all Next.js scaffold files (`package.json`, `tsconfig.json`, `app/`, `postcss.config.mjs`, etc. — Tailwind v4, no `tailwind.config.ts`)
 
 **Interfaces:**
 - Produces: a runnable Next.js + TypeScript + Tailwind app with `npm run dev` and `npm run build` scripts.
@@ -119,47 +118,29 @@ git commit -m "chore: scaffold Next.js + TypeScript + Tailwind app"
 
 Establish the dark-navy / violet-gradient design system once, so every later component just uses these tokens/utility classes.
 
+**IMPORTANT — this project uses Tailwind CSS v4.** v4 has NO `tailwind.config.ts`; the theme is defined in CSS with the `@theme` directive, and gradient utilities are named `bg-linear-to-*` (NOT `bg-gradient-to-*`). All configuration below goes in `app/globals.css`. Custom colors defined as `--color-<name>` in `@theme` auto-generate the matching `bg-<name>`, `text-<name>`, `border-<name>`, `from-<name>`, `to-<name>` utilities.
+
 **Files:**
-- Modify: `app/globals.css`
-- Modify: `tailwind.config.ts`
+- Modify: `app/globals.css` (only file — there is no `tailwind.config.ts`)
 
 **Interfaces:**
-- Produces: Tailwind theme colors `bg` (`#0c0e14`), `surface` (`#141925`), `border` (`#232a3a`), `accent` (`#6f7afd`), `accent2` (`#a855f7`), `muted` (`#9aa3b2`); a reusable `.text-gradient` and `.btn-gradient` utility class; dark background applied to `<body>`.
+- Produces: Tailwind theme colors `bg` (`#0c0e14`), `surface` (`#141925`), `border` (`#232a3a`), `accent` (`#6f7afd`), `accent2` (`#a855f7`), `muted` (`#9aa3b2`); reusable `.text-gradient`, `.btn-gradient`, `.chip`, `.section` component classes; dark background applied to `<body>`.
 
-- [ ] **Step 1: Define theme colors in `tailwind.config.ts`**
+- [ ] **Step 1: Replace the entire contents of `app/globals.css`**
 
-Replace the `theme.extend` block:
-```ts
-import type { Config } from "tailwindcss";
-
-const config: Config = {
-  content: [
-    "./app/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-  ],
-  theme: {
-    extend: {
-      colors: {
-        bg: "#0c0e14",
-        surface: "#141925",
-        border: "#232a3a",
-        accent: "#6f7afd",
-        accent2: "#a855f7",
-        muted: "#9aa3b2",
-      },
-    },
-  },
-  plugins: [],
-};
-export default config;
-```
-
-- [ ] **Step 2: Replace `app/globals.css` with theme base + helper classes**
+The scaffold generated a default `globals.css` with light/dark `--background`/`--foreground` vars and a Geist font setup. Replace the whole file with this dark theme:
 
 ```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0c0e14;
+  --color-surface: #141925;
+  --color-border: #232a3a;
+  --color-accent: #6f7afd;
+  --color-accent2: #a855f7;
+  --color-muted: #9aa3b2;
+}
 
 :root {
   color-scheme: dark;
@@ -171,13 +152,13 @@ body {
 
 @layer components {
   .text-gradient {
-    @apply bg-gradient-to-r from-accent to-accent2 bg-clip-text text-transparent;
+    @apply bg-linear-to-r from-accent to-accent2 bg-clip-text text-transparent;
   }
   .btn-gradient {
-    @apply inline-block rounded-lg bg-gradient-to-r from-accent to-accent2 px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-90;
+    @apply inline-block rounded-lg bg-linear-to-r from-accent to-accent2 px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-90;
   }
   .chip {
-    @apply inline-block rounded-full bg-surface border border-border px-2.5 py-1 text-xs text-accent;
+    @apply inline-block rounded-full border border-border bg-surface px-2.5 py-1 text-xs text-accent;
   }
   .section {
     @apply mx-auto max-w-5xl px-6 py-20;
@@ -185,9 +166,11 @@ body {
 }
 ```
 
-- [ ] **Step 3: Verify the theme applies**
+Note: keep the scaffold's `postcss.config.mjs` (it already wires up `@tailwindcss/postcss`) — do not modify it.
 
-Add a temporary line to `app/page.tsx` (replace its contents):
+- [ ] **Step 2: Verify the theme applies**
+
+Replace the contents of `app/page.tsx` with a temporary check:
 ```tsx
 export default function Home() {
   return <h1 className="section text-4xl font-bold text-gradient">Theme check</h1>;
@@ -195,10 +178,14 @@ export default function Home() {
 ```
 Run `npm run dev`, open `http://localhost:3000`. Expected: dark navy background with a violet→purple gradient "Theme check" heading. Stop the server.
 
+- [ ] **Step 3: Verify the build**
+
+Run `npm run build`. Expected: "Compiled successfully".
+
 - [ ] **Step 4: Commit**
 
 ```bash
-git add app/globals.css tailwind.config.ts app/page.tsx
+git add app/globals.css app/page.tsx
 git commit -m "feat: add dark navy + violet gradient theme tokens"
 ```
 
@@ -633,7 +620,7 @@ export default function JourneyTimeline() {
         {projects.map((p, i) => (
           <div key={p.slug} className="relative snap-start max-sm:pl-6">
             {/* connector dot */}
-            <span className="absolute -top-4 left-2 h-3 w-3 rounded-full bg-gradient-to-r from-accent to-accent2
+            <span className="absolute -top-4 left-2 h-3 w-3 rounded-full bg-linear-to-r from-accent to-accent2
                              max-sm:left-0 max-sm:top-2" />
             {/* connector line (desktop) */}
             {i < projects.length - 1 && (
