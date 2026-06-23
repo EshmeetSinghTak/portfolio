@@ -20,7 +20,7 @@ export default function Navbar() {
               {l.label}
             </a>
           ))}
-          <a href="/resume.pdf" target="_blank" className="btn-gradient !px-4 !py-2">
+          <a href="/resume.pdf" target="_blank" rel="noreferrer" className="btn-gradient !px-4 !py-2">
             Resume
           </a>
         </div>

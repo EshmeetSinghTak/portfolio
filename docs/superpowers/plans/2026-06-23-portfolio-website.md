@@ -17,6 +17,7 @@
 - **Visual direction:** Dark & techy. Background deep navy `#0c0e14`; accent gradient violet→purple `#6f7afd → #a855f7`; light text. Applied to name, primary buttons, timeline line/dots, and date markers.
 - **Project location:** `D:\my projects\portfolio` (already a git repo with `docs/` and `.gitignore` committed).
 - **Verification model:** No automated test framework (per spec). Each task is verified by `npm run build` succeeding and/or visual inspection in the browser at a stated URL.
+- **External links:** every `target="_blank"` anchor MUST also have `rel="noreferrer"` (prevents tabnabbing + referrer leak).
 - **Commits:** Commit at the end of every task. End commit messages with the standard co-author trailer.
 
 ---
@@ -353,7 +354,7 @@ export default function Navbar() {
               {l.label}
             </a>
           ))}
-          <a href="/resume.pdf" target="_blank" className="btn-gradient !px-4 !py-2">
+          <a href="/resume.pdf" target="_blank" rel="noreferrer" className="btn-gradient !px-4 !py-2">
             Resume
           </a>
         </div>
@@ -374,8 +375,8 @@ export default function Footer() {
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-8 text-sm text-muted">
         <span>© {profile.name}</span>
         <div className="flex gap-4">
-          <a href={profile.github} target="_blank" className="hover:text-white">GitHub</a>
-          <a href={profile.linkedin} target="_blank" className="hover:text-white">LinkedIn</a>
+          <a href={profile.github} target="_blank" rel="noreferrer" className="hover:text-white">GitHub</a>
+          <a href={profile.linkedin} target="_blank" rel="noreferrer" className="hover:text-white">LinkedIn</a>
           <a href={`mailto:${profile.email}`} className="hover:text-white">Email</a>
         </div>
       </div>
@@ -448,13 +449,13 @@ export default function Hero() {
       <p className="mt-5 max-w-xl text-lg text-muted">{profile.tagline}</p>
       <div className="mt-8 flex flex-wrap justify-center gap-3 sm:justify-start">
         <a href="#projects" className="btn-gradient">View my journey</a>
-        <a href="/resume.pdf" target="_blank" className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold hover:bg-surface">
+        <a href="/resume.pdf" target="_blank" rel="noreferrer" className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold hover:bg-surface">
           Download Resume
         </a>
       </div>
       <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm text-muted sm:justify-start">
-        <a href={profile.github} target="_blank" className="hover:text-white">GitHub</a>
-        <a href={profile.linkedin} target="_blank" className="hover:text-white">LinkedIn</a>
+        <a href={profile.github} target="_blank" rel="noreferrer" className="hover:text-white">GitHub</a>
+        <a href={profile.linkedin} target="_blank" rel="noreferrer" className="hover:text-white">LinkedIn</a>
         <a href={`mailto:${profile.email}`} className="hover:text-white">Email</a>
       </div>
     </section>
@@ -668,8 +669,8 @@ export default function Contact() {
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <a href={`mailto:${profile.email}`} className="btn-gradient">Email me</a>
-        <a href={profile.github} target="_blank" className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold hover:bg-surface">GitHub</a>
-        <a href={profile.linkedin} target="_blank" className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold hover:bg-surface">LinkedIn</a>
+        <a href={profile.github} target="_blank" rel="noreferrer" className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold hover:bg-surface">GitHub</a>
+        <a href={profile.linkedin} target="_blank" rel="noreferrer" className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold hover:bg-surface">LinkedIn</a>
       </div>
     </section>
   );
@@ -779,10 +780,10 @@ export default async function ProjectPage({
 
       <div className="mt-5 flex flex-wrap gap-3">
         {project.liveUrl ? (
-          <a href={project.liveUrl} target="_blank" className="btn-gradient">Live site</a>
+          <a href={project.liveUrl} target="_blank" rel="noreferrer" className="btn-gradient">Live site</a>
         ) : null}
         {project.githubUrl ? (
-          <a href={project.githubUrl} target="_blank" className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold hover:bg-surface">GitHub</a>
+          <a href={project.githubUrl} target="_blank" rel="noreferrer" className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold hover:bg-surface">GitHub</a>
         ) : null}
       </div>
 
